@@ -1,0 +1,156 @@
+﻿@model IncomeExpenseTracker.Models.Transaction
+
+@{
+    ViewData["Title"] = "Create";
+    List<Category> categories = ViewBag.Categories;
+    List<Category> SubCategories = ViewBag.SubCategories;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+   
+    <title>Expense/Income Tracker</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .test {
+            height: 200px;
+            width: 200px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Set the current date and time as the default value
+            var currentDate = new Date().toISOString().slice(0, 16);
+            $("#date").val(currentDate);
+
+            // Hide subcategory options on page load
+            $(".subcategory-option").hide();
+
+            // Show subcategory options for the selected category
+            $("#category").change(function () {
+                var selectedCategory = $(this).val();
+                $(".subcategory-option").hide();
+                $("." + selectedCategory).show();
+            });
+            
+            // Show subcategory options for the selected income type
+            $("input[name='Type']").change(function () {
+                var selectedType = $(this).val();
+                if (selectedType === "Доходы") {
+                  $(".subcategory-option.expenses").hide();
+                    $(".subcategory-option.income").show();
+                }
+                else if (selectedType === "Затраты") {
+                  $(".subcategory-option.income").hide();
+                    $(".subcategory-option.expenses").show();
+                } else {
+                    $(".subcategory-option.income").hide();
+                       $(".subcategory-option.expenses").hide();
+                }
+            });
+
+            // Submit form
+            $("#input-form").submit(function (event) {
+                event.preventDefault();
+                // Get form values
+                var date = $("#date").val();
+                var type = $("input[name='type']:checked").val();
+                var category = $("#category").val();
+                var subcategory = $("#subcategory-" + category).val();
+                var amount = $("#amount").val();
+                var comment = $("#comment").val();
+                // Do further processing with the form data, such as sending it to the server or storing it locally
+                console.log("Date: " + date);
+                console.log("Type: " + type);
+                console.log("Category: " + category);
+                console.log("Subcategory: " + subcategory);
+                console.log("Amount: " + amount);
+                console.log("Comment: " + comment);
+                // Clear the form fields
+                $("#date").val(currentDate);
+                $("input[name='type']:checked").prop("checked", false);
+                $("#category").val("");
+                $(".subcategory-option").hide();
+                $("#amount").val("");
+                $("#comment").val("");
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Expense/Income Tracker</h1>
+    <div class="container">
+        <div>
+            <form  asp-action="Create" asp-controller="Transaction" method="post">
+                <div class="form-group">
+                    <input asp-for="UserId" type="hidden" class="form-control" asp-items="ViewBag.UserId">
+                </div>
+                <div class="form-group">
+                    <label for="date">Date:</label>
+                    <input type="datetime-local" id="date" name="DateAdded" required class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>Type:</label>
+                    @foreach(Category item in categories)
+                    {
+                        <div class="form-check">
+                            <input type="radio" id="@item.Name" name="Type" value="@item.Name" required class="form-check-input">
+                            <label for="@item.Name" class="form-check-label">@item.Name</label>
+                        </div>
+                    }
+                @*    <div class="form-check">
+                        <input type="radio" id="income" name="Type" value="income" required class="form-check-input">
+                        <label for="income" class="form-check-label">Income</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" id="expense" name="Type" value="expense" class="form-check-input">
+                        <label for="expense" class="form-check-label">Expense</label>
+                    </div>*@
+                </div>
+
+                <div class="form-group subcategory-option income">
+                    <label for="subcategory-income">Subcategory:</label>
+                    <select id="subcategory-income" name="CategoryId" class="form-control">
+                        <option value="">Select a subcategory</option>
+                        @foreach (Category item in SubCategories.Where(x => x.ParentCategoryId == categories.Where(y => y.Name == "Доходы").FirstOrDefault().id.ToString()))
+                        {
+                            <option value="@item.id">@item.Name</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group subcategory-option expenses" >
+                    <label for="subcategory-expenses">Subcategory:</label>
+                    <select id="subcategory-expenses" name="CategoryId" class="form-control">
+                        <option value="">Select a subcategory</option>
+                        @foreach (Category item in SubCategories.Where(x => x.ParentCategoryId == categories.Where(y => y.Name == "Затраты").FirstOrDefault().id.ToString()))
+                        {
+                            <option value="@item.id">@item.Name</option>
+                        }
+                    </select>
+                </div>
+    
+                <div class="form-group">
+                    <label for="amount">Amount:</label>
+                    <input type="number" name="Amount" id="amount" step="0.01" required class="form-control" min="0">
+                </div>
+    
+                <button type="submit" class="btn btn-primary " >Submit</button>
+                <div class="form-group">
+                    <label for="comment">Comment:</label>
+                    <textarea id="comment" name="Comment" class="form-control"></textarea>
+                </div>
+    
+            </form>
+        </div>
+    </div>
+   
+</body>
+</html>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
