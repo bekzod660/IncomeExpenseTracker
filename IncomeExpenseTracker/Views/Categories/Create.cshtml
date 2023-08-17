@@ -19,14 +19,13 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ParentCategoryId" class="control-label"></label>
+                <label asp-for="ParentCategoryId" class="control-label">Parent Category</label>
                 <select name="ParentCategoryId" class="form-control">
                     <option value="">Select a subcategory</option>
                     @foreach (Category item in categories)
                     {
                         <option value="@item.id">@item.Name</option>
                     }
-
                     <span asp-validation-for="ParentCategoryId" class="text-danger"></span>
                 </select>
             </div>

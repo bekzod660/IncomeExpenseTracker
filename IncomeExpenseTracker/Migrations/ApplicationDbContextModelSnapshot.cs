@@ -24,19 +24,21 @@ namespace IncomeExpenseTracker.Migrations
 
             modelBuilder.Entity("IncomeExpenseTracker.Models.Category", b =>
                 {
-                    b.Property<Guid>("id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
 
-                    b.Property<Guid?>("Categoriesid")
-                        .HasColumnType("uuid");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<int?>("Categoriesid")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("ParentCategoryId")
-                        .HasColumnType("text");
+                    b.Property<int?>("ParentCategoryId")
+                        .HasColumnType("integer");
 
                     b.HasKey("id");
 
@@ -58,8 +60,8 @@ namespace IncomeExpenseTracker.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("Categoryid")
-                        .HasColumnType("uuid");
+                    b.Property<int?>("Categoryid")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Comment")
                         .IsRequired()

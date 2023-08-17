@@ -1,6 +1,7 @@
 ﻿
 using IncomeExpenseTracker.Data;
 using IncomeExpenseTracker.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -8,11 +9,12 @@ using System.Security.Claims;
 
 namespace IncomeExpenseTracker.Controllers
 {
-    // [Authorize]
+    [Authorize]
     public class TransactionController : Controller
     {
         private readonly ApplicationDbContext _context;
 
+        private int count = 0;
         public TransactionController(ApplicationDbContext context)
         {
             _context = context;
@@ -47,8 +49,81 @@ namespace IncomeExpenseTracker.Controllers
         }
 
         // GET: Transaction/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            if (count == 0)
+            {
+                //List<Category> defaultCategory = new List<Category>()
+                //{
+                //   new Category()
+                //   {
+                //       id =1,
+                //       Name = "Доходы"
+                //   },
+                //    new Category()
+                //   {
+                //       id = 2,
+                //       Name = "Затраты"
+                //   },
+                //    new Category()
+                //   {
+                //       id = 3,
+                //       Name = "Заработная плата",
+                //       ParentCategoryId = 1
+                //   },
+                //     new Category()
+                //   {
+                //       id =4,
+                //       Name = "Дохода с сдачи в аренду недвижимости",
+                //        ParentCategoryId = 1
+                //   },
+                //   new Category()
+                //   {
+                //       id = 5,
+                //       Name = "Иные доходы",
+                //        ParentCategoryId = 1
+                //   },
+                //    new Category()
+                //   {
+                //       id = 6,
+                //       Name = "Продукты питания",
+                //       ParentCategoryId = 2
+                //   },
+                //   new Category()
+                //   {
+                //       id = 7,
+                //       Name = "Транспорт",
+                //        ParentCategoryId = 2
+                //   },
+                //   new Category()
+                //   {
+                //       id = 8,
+                //       Name = "Мобильная связь",
+                //        ParentCategoryId =2
+                //   },
+                //    new Category()
+                //   {
+                //       id = 9,
+                //       Name = "Интернет",
+                //        ParentCategoryId =2
+                //   },
+                //    new Category()
+                //   {
+                //       id = 10,
+                //       Name = "Развлечения",
+                //        ParentCategoryId = 2
+                //   },
+                //    new Category()
+                //   {
+                //       id = 11,
+                //       Name = "Другое",
+                //        ParentCategoryId = 2
+                //   }
+                // };
+                //_context.Category.AddRange(defaultCategory);
+                //await _context.SaveChangesAsync();
+                //count++;
+            }
             ViewBag.Categories = _context.Category.Where(x => x.ParentCategoryId == null).ToList();
             ViewBag.SubCategories = _context.Category.Where(x => x.ParentCategoryId != null).ToList();
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

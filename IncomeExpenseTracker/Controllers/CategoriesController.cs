@@ -8,7 +8,6 @@ namespace IncomeExpenseTracker.Controllers
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
-
         public CategoriesController(ApplicationDbContext context)
         {
             _context = context;
@@ -23,7 +22,7 @@ namespace IncomeExpenseTracker.Controllers
         }
 
         // GET: Categories/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Category == null)
             {
@@ -57,7 +56,7 @@ namespace IncomeExpenseTracker.Controllers
         {
             if (ModelState.IsValid)
             {
-                category.id = Guid.NewGuid();
+
                 _context.Add(category);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -88,7 +87,7 @@ namespace IncomeExpenseTracker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("id,Name,ParentCategoryId")] Category category)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name,ParentCategoryId")] Category category)
         {
             if (id != category.id)
             {
@@ -119,7 +118,7 @@ namespace IncomeExpenseTracker.Controllers
         }
 
         // GET: Categories/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Category == null)
             {
@@ -155,7 +154,7 @@ namespace IncomeExpenseTracker.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CategoryExists(Guid id)
+        private bool CategoryExists(int id)
         {
             return (_context.Category?.Any(e => e.id == id)).GetValueOrDefault();
         }

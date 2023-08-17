@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace IncomeExpenseTracker.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class Init1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -55,10 +55,11 @@ namespace IncomeExpenseTracker.Migrations
                 name: "Category",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    ParentCategoryId = table.Column<string>(type: "text", nullable: true),
-                    Categoriesid = table.Column<Guid>(type: "uuid", nullable: true)
+                    ParentCategoryId = table.Column<int>(type: "integer", nullable: true),
+                    Categoriesid = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -184,7 +185,7 @@ namespace IncomeExpenseTracker.Migrations
                     DateAdded = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Type = table.Column<string>(type: "text", nullable: false),
                     CategoryId = table.Column<string>(type: "text", nullable: false),
-                    Categoryid = table.Column<Guid>(type: "uuid", nullable: true),
+                    Categoryid = table.Column<int>(type: "integer", nullable: true),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
                     Comment = table.Column<string>(type: "text", nullable: false),
                     UserId = table.Column<string>(type: "text", nullable: false)
